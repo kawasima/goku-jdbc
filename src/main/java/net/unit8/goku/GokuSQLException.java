@@ -7,6 +7,7 @@ import java.util.Locale;
  * @author kawasima
  */
 public class GokuSQLException extends SQLException {
+    private static final String ORA600 = "おめぇ〜つえ〜な〜、おらわくわくしてきたぞ";
     public GokuSQLException(SQLException orig) {
         super(orig.getMessage(), orig.getSQLState(), orig.getErrorCode(), orig);
     }
@@ -15,9 +16,11 @@ public class GokuSQLException extends SQLException {
         if (!sqlState.equals("99999")) {
             s = s.replaceAll("^ORA-\\d{5}: ", "");
         }
-        return s.replaceAll("です。", "だぞ。")
-                .replaceAll("います", "っぞ。")
-                .replaceAll("ません", "ねーぞ");
+        return s.replaceAll("です", "だぞ")
+                .replaceAll("います", "っぞ")
+                .replaceAll("あります", "あっぞ")
+                .replaceAll("(あり)?ません", "ねーぞ")
+                .replaceAll("ました", "たぞ");
     }
 
     @Override
@@ -25,7 +28,7 @@ public class GokuSQLException extends SQLException {
         int errorCode = getErrorCode();
         if (errorCode > 0) {
             return String.format(Locale.JAPAN, "オッス ORA-%05d %s", errorCode,
-                    convertToGokuDialect(super.getMessage(), getSQLState()));
+                    errorCode == 600 ? ORA600 : convertToGokuDialect(super.getMessage(), getSQLState()));
         } else {
             return super.getMessage();
         }

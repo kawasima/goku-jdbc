@@ -1,19 +1,23 @@
 package net.unit8.goku;
 
-import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author kawasima
  */
 public class GokuTest {
+    private static final Logger LOG = LoggerFactory.getLogger(GokuTest.class);
+
     @Test
     public void test942() throws SQLException {
         GokuDataSource ds = new GokuDataSource();
@@ -26,6 +30,7 @@ public class GokuTest {
             stmt.execute("SELECT hoge FROM huga");
             fail();
         } catch(SQLException e) {
+            LOG.error("", e);
             assertTrue(e.getMessage().contains("オッス ORA-00942"));
         }
     }
@@ -45,6 +50,7 @@ public class GokuTest {
             conn.commit();
             fail();
         } catch(SQLException e) {
+            LOG.error("", e);
             assertTrue(e.getMessage().contains("オッス ORA-00001"));
         } finally {
             try (Connection conn = ds.getConnection();
@@ -71,6 +77,7 @@ public class GokuTest {
             rs.getString("B");
             fail();
         } catch(SQLException e) {
+            LOG.error("", e);
             assertTrue(e.getMessage().contains("オッス ORA-17006"));
         } finally {
             try (Connection conn = ds.getConnection();
